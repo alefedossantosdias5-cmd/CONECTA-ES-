@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CONECTA-ES - Oportunidades no Espírito Santo</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              blue: '#0284c7',
+              cyan: '#06b6d4',
+              purple: '#9333ea',
+              amber: '#f59e0b',
+              green: '#10b981',
+              pink: '#ec4899',
+              indigo: '#6366f1'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f8fafc;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    .animate-pulse-glow {
+      animation: pulseGlow 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col pb-12">
+
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+      <!-- Logo & Brand Name -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-white font-black text-xl shadow-md">
+          ES
+        </div>
+        <div>
+          <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-sky-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            CONECTA-ES
+          </h1>
+          <p class="text-xs text-slate-500 font-medium">Emprego e Qualificação no Espírito Santo</p>
+        </div>
+      </div>
+
+      <!-- Right Header Actions -->
+      <div class="flex items-center gap-2">
+        <!-- Notification / Chat Button -->
+        <button onclick="toggleNotificationModal()" class="relative p-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 transition flex items-center justify-center" title="Notificações e Mensagens">
+          <i data-lucide="bell" class="w-5 h-5"></i>
+          <span id="unreadBadge" class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-white animate-ping"></span>
+          <span id="unreadDot" class="absolute -top-1 -right-1 w-3.5 h-3.5 bg-red-500 rounded-full border-2 border-white"></span>
+        </button>
+
+        <!-- User Register Button -->
+        <button onclick="openRegisterModal()" id="userHeaderBtn" class="flex items-center gap-2 px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm transition shadow-sm">
+          <i data-lucide="user" class="w-4 h-4"></i>
+          <span id="userHeaderLabel" class="hidden sm:inline">Cadastrar-se</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- NAVIGATION TABS BAR -->
+  <nav class="sticky top-[61px] z-30 bg-slate-900 text-slate-300 shadow-md">
+    <div class="max-w-7xl mx-auto px-2 flex overflow-x-auto custom-scrollbar gap-1 py-1.5 font-medium text-sm">
+      <button onclick="switchTab('inicio')" id="nav-inicio" class="nav-btn px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition bg-sky-600 text-white font-bold">
+        <i data-lucide="home" class="w-4 h-4"></i> Início
+      </button>
+      <button onclick="switchTab('vagas-regiao')" id="nav-vagas-regiao" class="nav-btn px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition hover:bg-slate-800 text-cyan-400">
+        <i data-lucide="map-pin" class="w-4 h-4"></i> Vagas na Região
+      </button>
+      <button onclick="switchTab('cursos')" id="nav-cursos" class="nav-btn px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition hover:bg-slate-800 text-purple-400">
+        <i data-lucide="graduation-cap" class="w-4 h-4"></i> Cursos
+      </button>
+      <button onclick="switchTab('dicas')" id="nav-dicas" class="nav-btn px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition hover:bg-slate-800 text-amber-400">
+        <i data-lucide="lightbulb" class="w-4 h-4"></i> Dicas & Entrevistas
+      </button>
+      <button onclick="switchTab('encontrar-emprego')" id="nav-encontrar-emprego" class="nav-btn px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition hover:bg-slate-800 text-emerald-400">
+        <i data-lucide="search" class="w-4 h-4"></i> Encontrar Emprego
+      </button>
+      <button onclick="switchTab('anunciar-vaga')" id="nav-anunciar-vaga" class="nav-btn px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition hover:bg-slate-800 text-pink-400">
+        <i data-lucide="plus-circle" class="w-4 h-4"></i> Anunciar Vaga
+      </button>
+      <button onclick="switchTab('curriculo')" id="nav-curriculo" class="nav-btn px-4 py-2 rounded-lg flex items-center gap-2 whitespace-nowrap transition hover:bg-slate-800 text-indigo-400">
+        <i data-lucide="file-text" class="w-4 h-4"></i> Como Fazer Currículo
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 pt-6 flex-grow w-full">
+
+    <!-- 1. ABA INÍCIO (AZUL) -->
+    <div id="tab-inicio" class="tab-content active space-y-6">
+      
+      <!-- FRRASE MOTIVACIONAL NO TOPO -->
+      <div class="bg-gradient-to-r from-sky-600 via-indigo-600 to-blue-700 text-white rounded-2xl p-6 shadow-lg relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+          <div class="space-y-2 max-w-3xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 text-xs font-semibold backdrop-blur">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-300"></i> Frase de Apoio do Dia
+            </div>
+            <p id="motivationalQuote" class="text-lg md:text-xl font-bold leading-relaxed italic">
+              "Carregando frase motivacional..."
+            </p>
+            <p id="motivationalAuthor" class="text-xs text-sky-200 font-medium">— CONECTA-ES</p>
+          </div>
+          <button onclick="generateRandomQuote()" class="self-start md:self-center px-4 py-2 bg-white text-sky-700 hover:bg-sky-50 font-bold text-sm rounded-xl transition shadow-sm flex items-center gap-2 whitespace-nowrap active:scale-95">
+            <i data-lucide="refresh-cw" id="quoteRefreshIcon" class="w-4 h-4"></i> Nova Frase
+          </button>
+        </div>
+      </div>
+
+      <!-- BOTÃO DE TUTORIAL INTERATIVO DO APP -->
+      <div class="bg-gradient-to-r from-emerald-500 via-teal-600 to-cyan-600 rounded-2xl p-6 text-white shadow-md relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <span class="inline-block px-2.5 py-0.5 rounded-md bg-white/20 text-xs font-bold uppercase tracking-wider">Aprenda a Usar</span>
+            <h2 class="text-xl font-extrabold">Como aproveitar o CONECTA-ES ao máximo?</h2>
+            <p class="text-sm text-emerald-100">Aprenda em 1 minuto como buscar vagas na sua cidade, montar currículo e falar com empresas.</p>
+          </div>
+          <button onclick="startInteractiveTutorial()" class="px-6 py-3 bg-white text-emerald-800 font-extrabold rounded-xl hover:bg-emerald-50 transition shadow-lg flex items-center gap-2 whitespace-nowrap active:scale-95 text-base">
+            <i data-lucide="play-circle" class="w-6 h-6 text-emerald-600"></i>
+            🚀 Iniciar Tutorial do App
+          </button>
+        </div>
+      </div>
+
+      <!-- STATUS DO CADASTRO / BOAS VINDAS -->
+      <div id="userWelcomeCard" class="bg-sky-50 border border-sky-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-sky-600 text-white flex items-center justify-center font-bold text-lg">
+            <i data-lucide="user-check" class="w-6 h-6"></i>
+          </div>
+          <div>
+            <h3 class="font-bold text-slate-800 text-base" id="welcomeUserTitle">Bem-vindo ao CONECTA-ES!</h3>
+            <p class="text-xs text-slate-600" id="welcomeUserSubtitle">Cadastre-se para filtrar automaticamente oportunidades na sua cidade capixaba.</p>
+          </div>
+        </div>
+        <button onclick="openRegisterModal()" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold transition self-start md:self-auto">
+          <span id="welcomeBtnLabel">Configurar Perfil</span>
+        </button>
+      </div>
+
+      <!-- ATALHOS RÁPIDOS DAS ABAS -->
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div onclick="switchTab('vagas-regiao')" class="cursor-pointer bg-white border border-cyan-200 p-4 rounded-xl hover:shadow-md transition text-center group">
+          <div class="w-10 h-10 mx-auto rounded-lg bg-cyan-100 text-cyan-700 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+            <i data-lucide="map-pin" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-xs text-slate-800">Vagas Locais</h4>
+          <p class="text-[10px] text-slate-500 mt-1">Oportunidades do ES</p>
+        </div>
+
+        <div onclick="switchTab('cursos')" class="cursor-pointer bg-white border border-purple-200 p-4 rounded-xl hover:shadow-md transition text-center group">
+          <div class="w-10 h-10 mx-auto rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+            <i data-lucide="graduation-cap" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-xs text-slate-800">Cursos Grátis</h4>
+          <p class="text-[10px] text-slate-500 mt-1">SENAI, IFES e mais</p>
+        </div>
+
+        <div onclick="switchTab('dicas')" class="cursor-pointer bg-white border border-amber-200 p-4 rounded-xl hover:shadow-md transition text-center group">
+          <div class="w-10 h-10 mx-auto rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+            <i data-lucide="lightbulb" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-xs text-slate-800">Dicas de Entrevista</h4>
+          <p class="text-[10px] text-slate-500 mt-1">Como se comportar</p>
+        </div>
+
+        <div onclick="switchTab('encontrar-emprego')" class="cursor-pointer bg-white border border-emerald-200 p-4 rounded-xl hover:shadow-md transition text-center group">
+          <div class="w-10 h-10 mx-auto rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+            <i data-lucide="search" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-xs text-slate-800">Buscar Emprego</h4>
+          <p class="text-[10px] text-slate-500 mt-1">Envio direto</p>
+        </div>
+
+        <div onclick="switchTab('anunciar-vaga')" class="cursor-pointer bg-white border border-pink-200 p-4 rounded-xl hover:shadow-md transition text-center group">
+          <div class="w-10 h-10 mx-auto rounded-lg bg-pink-100 text-pink-700 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+            <i data-lucide="plus-circle" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-xs text-slate-800">Anunciar Vaga</h4>
+          <p class="text-[10px] text-slate-500 mt-1">Para empresas</p>
+        </div>
+
+        <div onclick="switchTab('curriculo')" class="cursor-pointer bg-white border border-indigo-200 p-4 rounded-xl hover:shadow-md transition text-center group">
+          <div class="w-10 h-10 mx-auto rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center mb-2 group-hover:scale-110 transition">
+            <i data-lucide="file-text" class="w-5 h-5"></i>
+          </div>
+          <h4 class="font-bold text-xs text-slate-800">Gerador Currículo</h4>
+          <p class="text-[10px] text-slate-500 mt-1">Crie e Baixe PDF</p>
+        </div>
+      </div>
+
+      <!-- DESTAQUES DA SEMANA -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+            <i data-lucide="award" class="w-5 h-5 text-sky-600"></i> Destaques do Espírito Santo
+          </h3>
+          <span class="text-xs bg-sky-100 text-sky-800 font-bold px-2.5 py-1 rounded-full">Atualizado hoje</span>
+        </div>
+        <div class="grid md:grid-cols-3 gap-4" id="homeHighlightsContainer">
+          <!-- Dinâmico via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ABA VAGAS NA REGIÃO (CIANO) -->
+    <div id="tab-vagas-regiao" class="tab-content space-y-6">
+      <div class="bg-cyan-600 text-white rounded-2xl p-6 shadow-md">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-black flex items-center gap-2">
+              <i data-lucide="map-pin" class="w-7 h-7"></i> Oportunidades na Sua Região
+            </h2>
+            <p class="text-cyan-100 text-sm mt-1">Veja as vagas abertas selecionadas para a sua localidade no Espírito Santo.</p>
+          </div>
+          <div class="bg-cyan-700/60 backdrop-blur p-3 rounded-xl border border-cyan-400/30 text-xs">
+            <span>Região Selecionada:</span>
+            <span id="currentRegionLabel" class="font-bold text-white block text-sm">Todas as cidades do ES</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- FILTRO RÁPIDO DE CIDADES DO ES -->
+      <div class="bg-white p-4 rounded-xl border border-slate-200 flex flex-wrap items-center gap-3">
+        <label class="text-xs font-bold text-slate-600 flex items-center gap-1">
+          <i data-lucide="filter" class="w-4 h-4 text-cyan-600"></i> Filtrar Cidade:
+        </label>
+        <select id="regionFilterSelect" onchange="filterRegionJobs()" class="text-sm bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-500">
+          <option value="TODAS">Todas as Cidades do ES</option>
+          <option value="Vitória">Vitória</option>
+          <option value="Vila Velha">Vila Velha</option>
+          <option value="Serra">Serra</option>
+          <option value="Cariacica">Cariacica</option>
+          <option value="Cachoeiro de Itapemirim">Cachoeiro de Itapemirim</option>
+          <option value="Linhares">Linhares</option>
+          <option value="Colatina">Colatina</option>
+          <option value="Guarapari">Guarapari</option>
+          <option value="São Mateus">São Mateus</option>
+          <option value="Aracruz">Aracruz</option>
+        </select>
+        <span class="text-xs text-slate-400 ml-auto" id="jobsCountBadge">0 vagas encontradas</span>
+      </div>
+
+      <!-- LISTA DE VAGAS DA REGIÃO -->
+      <div class="grid md:grid-cols-2 gap-4" id="regionJobsContainer">
+        <!-- Injetado via JS -->
+      </div>
+    </div>
+
+    <!-- 3. ABA CURSOS & ESCOLAS (ROXO) -->
+    <div id="tab-cursos" class="tab-content space-y-6">
+      <div class="bg-purple-700 text-white rounded-2xl p-6 shadow-md">
+        <h2 class="text-2xl font-black flex items-center gap-2">
+          <i data-lucide="graduation-cap" class="w-7 h-7"></i> Lugares e Escolas com Cursos Profissionalizantes
+        </h2>
+        <p class="text-purple-100 text-sm mt-1">Instituições no ES com cursos gratuitos e pagos para te capacitar para o mercado.</p>
+      </div>
+
+      <!-- BUSCA DE CURSOS -->
+      <div class="grid md:grid-cols-3 gap-3">
+        <div class="md:col-span-2">
+          <input type="text" id="courseSearchInput" onkeyup="renderCourses()" placeholder="Procure por curso ou escola (ex: SENAI, Informática, Soldador)..." class="w-full bg-white border border-slate-300 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500">
+        </div>
+        <div>
+          <select id="courseTypeSelect" onchange="renderCourses()" class="w-full bg-white border border-slate-300 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 font-medium">
+            <option value="TODOS">Todas as Modalidades</option>
+            <option value="Gratuito">Apenas Gratuitos</option>
+            <option value="Presencial">Presencial no ES</option>
+            <option value="EAD">EAD / Online</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- CONTAINER DE CURSOS -->
+      <div class="grid md:grid-cols-3 gap-4" id="coursesGridContainer">
+        <!-- JS rendeiriza aqui -->
+      </div>
+    </div>
+
+    <!-- 4. ABA DICAS E PERGUNTAS (ÂMBAR) -->
+    <div id="tab-dicas" class="tab-content space-y-6">
+      <div class="bg-amber-600 text-white rounded-2xl p-6 shadow-md">
+        <h2 class="text-2xl font-black flex items-center gap-2">
+          <i data-lucide="lightbulb" class="w-7 h-7"></i> Como se Vestir e se Comportar na Entrevista
+        </h2>
+        <p class="text-amber-100 text-sm mt-1">Guia completo para causar a melhor impressão e responder com confiança.</p>
+      </div>
+
+      <!-- NAVEGAÇÃO INTERNA DA ABA DE DICAS -->
+      <div class="grid md:grid-cols-3 gap-4">
+        <!-- GUIA DE VESTIMENTA -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+            <i data-lucide="shirt" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-extrabold text-slate-800 text-base">1. Como se Vestir</h3>
+          <ul class="text-xs text-slate-600 space-y-2 list-disc list-inside">
+            <li><strong>Vagas Formais (Escritórios/Bancos):</strong> Calça social ou jeans escuro sem rasgos, camisa de botão ou polo discreta, sapatos limpos.</li>
+            <li><strong>Vagas Operacionais/Comércio:</strong> Roupas limpas, sem estampas chamativas ou frases ofensivas. Acessórios moderados.</li>
+            <li><strong>Higiene Pessoal:</strong> Cabelos alinhados, unhas limpas, perfume suave (sem exageros).</li>
+          </ul>
+        </div>
+
+        <!-- GUIA DE COMPORTAMENTO -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+            <i data-lucide="user-check" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-extrabold text-slate-800 text-base">2. Linguagem Corporal</h3>
+          <ul class="text-xs text-slate-600 space-y-2 list-disc list-inside">
+            <li><strong>Pontualidade:</strong> Chegue de 10 a 15 minutos antes da hora marcada.</li>
+         <li><strong>Postura:</strong> Sente-se ereto, mantenha contato visual amigável e cumprimente com um aperto de mão firme ou um sorriso natural.</li>
+            <li><strong>Tom de Voz:</strong> Fale com clareza, evitando gírias excessivas. Deixe o entrevistador concluir a pergunta antes de responder.</li>
+          </ul>
+        </div>
+
+        <!-- O QUE EVITAR -->
+        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-3">
+          <div class="w-10 h-10 rounded-xl bg-red-100 text-red-700 flex items-center justify-center">
+            <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+          </div>
+          <h3 class="font-extrabold text-slate-800 text-base">3. O Que NUNCA Fazer</h3>
+          <ul class="text-xs text-slate-600 space-y-2 list-disc list-inside">
+            <li><strong>Celular:</strong> Mantenha no modo silencioso e NUNCA olhe durante a conversa.</li>
+            <li><strong>Falar mal de empregos anteriores:</strong> Foque no seu aprendizado e evolução.</li>
+            <li><strong>Mentir no currículo:</strong> Seja sincero sobre suas habilidades e disposição para aprender.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- PERGUNTAS MAIS FREQUENTES NA ENTREVISTA -->
+      <div class="bg-white rounded-2xl border border-slate-200 p-6 space-y-4">
+        <h3 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+          <i data-lucide="help-circle" class="w-5 h-5 text-amber-600"></i> Perguntas Frequentes & Como Responder
+        </h3>
+
+        <div class="space-y-3" id="faqAccordion">
+          <!-- Card de Pergunta 1 -->
+          <div class="border border-slate-200 rounded-xl p-4 hover:border-amber-400 transition cursor-pointer" onclick="toggleFaq(1)">
+            <div class="flex items-center justify-between font-bold text-slate-800 text-sm">
+              <span>"Fale um pouco sobre você..."</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition" id="faqIcon-1"></i>
+            </div>
+            <p id="faqAnswer-1" class="hidden text-xs text-slate-600 mt-2 pt-2 border-t border-slate-100 leading-relaxed">
+              <strong>Como responder:</strong> Faça um resumo de 1 a 2 minutos focando na sua trajetória profissional, seus principais aprendizados, cursos realizados e por que você tem interesse na empresa. Evite detalhes pessoais irrelevantes.
+            </p>
+          </div>
+
+          <!-- Card de Pergunta 2 -->
+          <div class="border border-slate-200 rounded-xl p-4 hover:border-amber-400 transition cursor-pointer" onclick="toggleFaq(2)">
+            <div class="flex items-center justify-between font-bold text-slate-800 text-sm">
+              <span>"Quais são seus pontos fortes e fracos?"</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition" id="faqIcon-2"></i>
+            </div>
+            <p id="faqAnswer-2" class="hidden text-xs text-slate-600 mt-2 pt-2 border-t border-slate-100 leading-relaxed">
+              <strong>Pontos Fortes:</strong> Escolha qualidades ligadas ao trabalho (ex: pontualidade, facilidade em trabalhar em equipe, organização).<br>
+              <strong>Pontos Fracos:</strong> Cite algo real, mas mostre como está trabalhando para melhorar (ex: "Ás vezes fico ansioso com prazos, então uso agendas para me planejar com antecedência").
+            </p>
+          </div>
+
+          <!-- Card de Pergunta 3 -->
+          <div class="border border-slate-200 rounded-xl p-4 hover:border-amber-400 transition cursor-pointer" onclick="toggleFaq(3)">
+            <div class="flex items-center justify-between font-bold text-slate-800 text-sm">
+              <span>"Por que deveríamos te contratar?"</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition" id="faqIcon-3"></i>
+            </div>
+            <p id="faqAnswer-3" class="hidden text-xs text-slate-600 mt-2 pt-2 border-t border-slate-100 leading-relaxed">
+              <strong>Como responder:</strong> Conecte suas habilidades com as necessidades da vaga. Destaque sua motivação para aprender, dedicação e como pode contribuir para os resultados da empresa no Espírito Santo.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. ABA ENCONTRAR EMPREGO (VERDE) -->
+    <div id="tab-encontrar-emprego" class="tab-content space-y-6">
+      <div class="bg-emerald-600 text-white rounded-2xl p-6 shadow-md">
+        <h2 class="text-2xl font-black flex items-center gap-2">
+          <i data-lucide="search" class="w-7 h-7"></i> Encontrar Vagas de Emprego no ES
+        </h2>
+        <p class="text-emerald-100 text-sm mt-1">Busque vagas disponíveis nas empresas locais do Espírito Santo e candidate-se com 1 clique.</p>
+      </div>
+
+      <!-- FILTROS DE BUSCA -->
+      <div class="bg-white p-4 rounded-xl border border-slate-200 grid md:grid-cols-3 gap-3">
+        <input type="text" id="findJobTitleInput" onkeyup="renderAllJobs()" placeholder="Título do cargo (ex: Vendedor, Auxiliar)..." class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        
+        <select id="findJobCitySelect" onchange="renderAllJobs()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <option value="TODAS">Todas as Cidades do ES</option>
+          <option value="Vitória">Vitória</option>
+          <option value="Vila Velha">Vila Velha</option>
+          <option value="Serra">Serra</option>
+          <option value="Cariacica">Cariacica</option>
+          <option value="Cachoeiro de Itapemirim">Cachoeiro de Itapemirim</option>
+          <option value="Linhares">Linhares</option>
+          <option value="Colatina">Colatina</option>
+          <option value="Guarapari">Guarapari</option>
+          <option value="São Mateus">São Mateus</option>
+          <option value="Aracruz">Aracruz</option>
+        </select>
+
+        <select id="findJobModalitySelect" onchange="renderAllJobs()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500">
+          <option value="TODOS">Todos os Modelos</option>
+          <option value="Presencial">Presencial</option>
+          <option value="Híbrido">Híbrido</option>
+          <option value="Remoto">Remoto</option>
+        </select>
+      </div>
+
+      <!-- LISTA DE VAGAS -->
+      <div class="grid md:grid-cols-2 gap-4" id="allJobsContainer">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </div>
+
+    <!-- 6. ABA ANUNCIAR EMPREGO (ROSA) - APENAS EMPRESAS PERSONALIZAM -->
+    <div id="tab-anunciar-vaga" class="tab-content space-y-6">
+      <div class="bg-pink-600 text-white rounded-2xl p-6 shadow-md">
+        <h2 class="text-2xl font-black flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-7 h-7"></i> Painel de Publicação de Vagas (Empresas)
+        </h2>
+        <p class="text-pink-100 text-sm mt-1">Publique e personalize o título, salário, cidade do ES e descrição do cargo para encontrar talentos.</p>
+      </div>
+
+      <!-- VERIFICAÇÃO DE TIPO DE CONTA -->
+      <div id="employerOnlyView" class="hidden bg-white border border-slate-200 rounded-2xl p-6 shadow-sm max-w-2xl mx-auto">
+        <h3 class="font-bold text-slate-800 text-lg mb-1 flex items-center gap-2">
+          <i data-lucide="edit-3" class="w-5 h-5 text-pink-600"></i> Cadastrar e Personalizar Nova Vaga
+        </h3>
+        <p class="text-xs text-slate-500 mb-6">Preencha os campos abaixo com os dados customizados da sua vaga.</p>
+
+        <form id="postJobForm" onsubmit="handlePostJob(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">1. Título do Cargo / Nome da Vaga *</label>
+            <input type="text" id="postJobTitle" required placeholder="Ex: Auxiliar de Logística, Desenvolvedor Web, Atendente" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-pink-500 focus:outline-none">
+          </div>
+
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">2. Salário / Valor Oferecido (R$) *</label>
+              <input type="text" id="postJobSalary" required placeholder="Ex: R$ 2.100,00 ou A Combinar" class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-pink-500 focus:outline-none">
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">3. Região / Cidade do ES *</label>
+              <select id="postJobCity" required class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-pink-500 focus:outline-none">
+                <option value="Vitória">Vitória</option>
+                <option value="Vila Velha">Vila Velha</option>
+                <option value="Serra">Serra</option>
+                <option value="Cariacica">Cariacica</option>
+                <option value="Cachoeiro de Itapemirim">Cachoeiro de Itapemirim</option>
+                <option value="Linhares">Linhares</option>
+                <option value="Colatina">Colatina</option>
+                <option value="Guarapari">Guarapari</option>
+                <option value="São Mateus">São Mateus</option>
+                <option value="Aracruz">Aracruz</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">4. Descrição Personalizada da Vaga *</label>
+            <textarea id="postJobDescription" rows="4" required placeholder="Descreva os requisitos, horários e benefícios oferecidos..." class="w-full border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-pink-500 focus:outline-none"></textarea>
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-pink-600 hover:bg-pink-700 text-white font-bold text-sm rounded-xl shadow-md transition flex items-center justify-center gap-2">
+            <i data-lucide="check-circle" class="w-5 h-5"></i> Publicar Vaga no CONECTA-ES
+          </button>
+        </form>
+      </div>
+
+      <!-- TELA DE RESTRIÇÃO PARA TRABALHADOR / ALUNO -->
+      <div id="workerRestrictionView" class="bg-slate-50 border border-slate-200 rounded-2xl p-8 text-center max-w-xl mx-auto space-y-4">
+        <div class="w-16 h-16 bg-pink-100 text-pink-600 rounded-full flex items-center justify-center mx-auto">
+          <i data-lucide="lock" class="w-8 h-8"></i>
+        </div>
+        <h3 class="font-bold text-slate-800 text-lg">Área Exclusiva para Empresas</h3>
+        <p class="text-xs text-slate-600 leading-relaxed">
+          Você está atualmente cadastrado como <strong>Trabalhador / Aluno</strong>. A personalização e anúncio de novas vagas é restrita a contas do tipo <strong>Empresa / Recrutador</strong>.
+        </p>
+        <button onclick="switchToEmployerRole()" class="px-5 py-2.5 bg-pink-600 hover:bg-pink-700 text-white text-xs font-bold rounded-xl transition shadow-sm inline-flex items-center gap-2">
+          <i data-lucide="repeat" class="w-4 h-4"></i> Mudar Perfil para Empresa
+        </button>
+      </div>
+    </div>
+
+    <!-- 7. ABA COMO FAZER UM CURRÍCULO (ÍNDIGO) -->
+    <div id="tab-curriculo" class="tab-content space-y-6">
+      <div class="bg-indigo-700 text-white rounded-2xl p-6 shadow-md">
+        <h2 class="text-2xl font-black flex items-center gap-2">
+          <i data-lucide="file-text" class="w-7 h-7"></i> Como Fazer um Currículo Campeão
+        </h2>
+        <p class="text-indigo-100 text-sm mt-1">Preencha o formulário abaixo e veja seu currículo formatado em tempo real na tela.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-6">
+        <!-- FORMULÁRIO DO CURRÍCULO -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <h3 class="font-bold text-slate-800 text-base flex items-center gap-2 border-b border-slate-100 pb-2">
+            <i data-lucide="edit-2" class="w-4 h-4 text-indigo-600"></i> Suas Informações
+          </h3>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nome Completo</label>
+            <input type="text" id="cvName" oninput="updateCVPreview()" placeholder="Seu nome" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Telefone / WhatsApp</label>
+              <input type="text" id="cvPhone" oninput="updateCVPreview()" placeholder="(27) 99999-9999" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">E-mail</label>
+              <input type="email" id="cvEmail" oninput="updateCVPreview()" placeholder="seu@email.com" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Cidade no ES</label>
+              <input type="text" id="cvCity" oninput="updateCVPreview()" placeholder="Vitória, ES" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Cargo Desejado</label>
+              <input type="text" id="cvObjective" oninput="updateCVPreview()" placeholder="Ex: Vendedor / Atendente" class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Resumo Profissional / Habilidades</label>
+            <textarea id="cvSummary" oninput="updateCVPreview()" rows="3" placeholder="Pequeno resumo sobre suas qualidades e objetivos..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Experiências Anteriores (ou Primeiro Emprego)</label>
+            <textarea id="cvExperience" oninput="updateCVPreview()" rows="3" placeholder="Nome da empresa - Cargo (Ano)&#10;Principais tarefas realizadas..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Escolaridade e Cursos</label>
+            <textarea id="cvEducation" oninput="updateCVPreview()" rows="3" placeholder="Ensino Médio Completo - Escola XYZ&#10;Curso de Informática - SENAI ES..." class="w-full border border-slate-300 rounded-lg px-3 py-2 text-sm"></textarea>
+          </div>
+
+          <button onclick="window.print()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl transition shadow-sm flex items-center justify-center gap-2">
+            <i data-lucide="printer" class="w-4 h-4"></i> Imprimir / Salvar em PDF
+          </button>
+        </div>
+
+        <!-- PRÉ-VISUALIZAÇÃO AO VIVO DO CURRÍCULO -->
+        <div class="bg-white p-8 rounded-2xl border-2 border-indigo-200 shadow-md min-h-[500px] flex flex-col justify-between" id="cvPrintArea">
+          <div class="space-y-4">
+            <!-- Header do CV -->
+            <div class="border-b-2 border-slate-800 pb-3">
+              <h2 id="prevName" class="text-2xl font-black uppercase text-slate-900 tracking-wide">SEU NOME COMPLETO</h2>
+              <p id="prevObjective" class="text-sm font-bold text-indigo-600 uppercase mt-0.5">CARGO DESEJADO</p>
+              <div class="text-xs text-slate-600 flex flex-wrap gap-x-4 gap-y-1 mt-2">
+                <span id="prevCity">Vitória - Espírito Santo</span>
+                <span id="prevPhone">(27) 99999-9999</span>
+                <span id="prevEmail">seuemail@exemplo.com</span>
+              </div>
+            </div>
+
+            <!-- Resumo -->
+            <div>
+              <h4 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-1 mb-1">Resumo Profissional</h4>
+              <p id="prevSummary" class="text-xs text-slate-700 whitespace-pre-line leading-relaxed">Profissional dedicado e pontual, em busca de oportunidade para contribuir com o crescimento da empresa no Espírito Santo.</p>
+            </div>
+
+            <!-- Experiência -->
+            <div>
+              <h4 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-1 mb-1">Experiência Profissional</h4>
+              <p id="prevExperience" class="text-xs text-slate-700 whitespace-pre-line leading-relaxed">Em busca do primeiro emprego / Disponível para início imediato.</p>
+            </div>
+
+            <!-- Educação -->
+            <div>
+              <h4 class="text-xs font-extrabold text-slate-800 uppercase tracking-wider border-b border-slate-200 pb-1 mb-1">Escolaridade e Cursos</h4>
+              <p id="prevEducation" class="text-xs text-slate-700 whitespace-pre-line leading-relaxed">Ensino Médio Completo.</p>
+            </div>
+          </div>
+
+          <div class="text-center pt-6 border-t border-slate-100 text-[10px] text-slate-400">
+            Documento gerado via plataforma CONECTA-ES
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODAL DE CADASTRO -->
+  <div id="registerModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl relative space-y-4">
+      <button onclick="closeRegisterModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+        <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center">
+          <i data-lucide="user-plus" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-800 text-base">Cadastro no CONECTA-ES</h3>
+          <p class="text-xs text-slate-500">Filtre vagas e oportunidades no ES</p>
+        </div>
+      </div>
+
+      <form onsubmit="handleRegisterSubmit(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Nome Completo *</label>
+          <input type="text" id="regName" required placeholder="Digite seu nome" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Tipo de Perfil *</label>
+          <select id="regRole" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none font-medium">
+            <option value="Trabalhador">Trabalhador / Aluno (Busco Vagas)</option>
+            <option value="Empresa">Empresa / Recrutador (Anunciar Vagas)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">E-mail ou Telefone *</label>
+          <input type="text" id="regContact" required placeholder="exemplo@gmail.com ou (27) 99999-9999" class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Estado</label>
+            <input type="text" id="regState" value="Espírito Santo (ES)" readonly class="w-full bg-slate-100 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold text-slate-600 cursor-not-allowed">
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Cidade no ES *</label>
+            <select id="regCity" required class="w-full border border-slate-300 rounded-xl px-3 py-2 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
+              <option value="Vitória">Vitória</option>
+              <option value="Vila Velha">Vila Velha</option>
+              <option value="Serra">Serra</option>
+              <option value="Cariacica">Cariacica</option>
+              <option value="Cachoeiro de Itapemirim">Cachoeiro de Itapemirim</option>
+              <option value="Linhares">Linhares</option>
+              <option value="Colatina">Colatina</option>
+              <option value="Guarapari">Guarapari</option>
+              <option value="São Mateus">São Mateus</option>
+              <option value="Aracruz">Aracruz</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl transition shadow-md mt-2">
+          Salvar Cadastro
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE NOTIFICAÇÕES E CHAT COM EMPRESAS -->
+  <div id="notificationModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl relative space-y-4">
+      <button onclick="toggleNotificationModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
+        <div class="w-10 h-10 rounded-xl bg-cyan-100 text-cyan-600 flex items-center justify-center">
+          <i data-lucide="message-square" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h3 class="font-bold text-slate-800 text-base">Conversas e Notificações</h3>
+          <p class="text-xs text-slate-500">Mensagens enviadas pelas empresas do ES</p>
+        </div>
+      </div>
+
+      <!-- LISTA DE MENSAGENS -->
+      <div class="space-y-3 max-h-80 overflow-y-auto custom-scrollbar" id="messagesList">
+        <!-- Injetado via JS -->
+      </div>
+
+      <div class="pt-2 border-t border-slate-100 text-center">
+        <button onclick="toggleNotificationModal()" class="px-4 py-2 bg-slate-100 text-slate-700 font-bold text-xs rounded-xl hover:bg-slate-200 transition">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE TUTORIAL INTERATIVO COM OPÇÃO LER OU OUVIR (IA) -->
+  <div id="tutorialModal" class="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl relative space-y-6 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      
+      <!-- FECHAR -->
+      <button onclick="closeTutorialModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1">
+        <i data-lucide="x" class="w-6 h-6"></i>
+      </button>
+
+      <!-- CABEÇALHO DO TUTORIAL -->
+      <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white flex items-center justify-center shadow-md">
+          <i data-lucide="compass" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h3 class="font-extrabold text-slate-800 text-lg">Guia Interativo de Uso CONECTA-ES</h3>
+          <p class="text-xs text-slate-500">Escolha abaixo como prefere aprender a utilizar a plataforma</p>
+        </div>
+      </div>
+
+      <!-- BOTÕES DE SELEÇÃO: LER OU OUVIR COM IA -->
+      <div class="grid grid-cols-2 gap-4">
+        <button onclick="selectTutorialMode('text')" id="modeTextBtn" class="p-4 rounded-xl border-2 border-sky-600 bg-sky-50 text-sky-800 font-bold text-sm flex flex-col items-center gap-2 hover:bg-sky-100 transition">
+          <i data-lucide="book-open" class="w-6 h-6 text-sky-600"></i>
+          <span>1. Ler Tutorial (Texto)</span>
+        </button>
+
+        <button onclick="selectTutorialMode('audio')" id="modeAudioBtn" class="p-4 rounded-xl border-2 border-slate-200 bg-slate-50 text-slate-700 font-bold text-sm flex flex-col items-center gap-2 hover:bg-purple-50 hover:border-purple-500 transition">
+          <i data-lucide="volume-2" class="w-6 h-6 text-purple-600"></i>
+          <span>2. Ouvir com IA (Voz)</span>
+        </button>
+      </div>
+
+      <!-- PAINEL DO MODO AUDIO (CONTROLES DA IA) -->
+      <div id="audioControlsPanel" class="hidden bg-purple-50 border border-purple-200 rounded-xl p-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-purple-900 flex items-center gap-2">
+            <i data-lucide="bot" class="w-4 h-4 text-purple-600"></i> Assistente de Voz CONECTA-ES
+          </span>
+          <span id="audioStatusBadge" class="text-[10px] bg-purple-200 text-purple-800 font-bold px-2 py-0.5 rounded-full">Pronto</span>
+        </div>
+
+        <div class="flex items-center justify-center gap-3 py-2">
+          <button onclick="playSpeechTutorial()" class="px-4 py-2 bg-purple-600 text-white font-bold text-xs rounded-xl hover:bg-purple-700 transition flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="play" class="w-4 h-4"></i> Tocar
+          </button>
+          <button onclick="pauseSpeechTutorial()" class="px-4 py-2 bg-amber-500 text-white font-bold text-xs rounded-xl hover:bg-amber-600 transition flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="pause" class="w-4 h-4"></i> Pausar
+          </button>
+          <button onclick="stopSpeechTutorial()" class="px-4 py-2 bg-red-500 text-white font-bold text-xs rounded-xl hover:bg-red-600 transition flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="square" class="w-4 h-4"></i> Parar
+          </button>
+        </div>
+      </div>
+
+      <!-- CONTEÚDO DO TUTORIAL (PASSO A PASSO) -->
+      <div class="space-y-4 text-xs text-slate-600" id="tutorialStepsContainer">
+        <!-- Passo 1 -->
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1">
+          <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-sky-600 text-white text-[10px] flex items-center justify-center">1</span>
+            Cadastro e Filtro por Cidades
+          </h4>
+          <p class="text-slate-600 leading-relaxed">
+            Clique no botão <strong>"Cadastrar-se"</strong> no canto superior direito. Informe seu nome, contato e cidade do Espírito Santo para que o aplicativo liste automaticamente oportunidades da sua região.
+          </p>
+        </div>
+
+        <!-- Passo 2 -->
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1">
+          <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-cyan-600 text-white text-[10px] flex items-center justify-center">2</span>
+            Aba "Vagas na Região" & "Encontrar Emprego"
+          </h4>
+          <p class="text-slate-600 leading-relaxed">
+            Navegue pelas abas para ver vagas abertas. Você pode se candidatar em 1 clique e acompanhar o envio direto aos recrutadores locais.
+          </p>
+        </div>
+
+        <!-- Passo 3 -->
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1">
+          <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-purple-600 text-white text-[10px] flex items-center justify-center">3</span>
+            Cursos & Escolas Profissionalizantes
+          </h4>
+          <p class="text-slate-600 leading-relaxed">
+            Acesse a aba <strong>Cursos</strong> para ver opções de qualificação gratuitas e presenciais no ES oferecidas por instituições como SENAI, IFES e CIEE.
+          </p>
+        </div>
+
+        <!-- Passo 4 -->
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1">
+          <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-amber-600 text-white text-[10px] flex items-center justify-center">4</span>
+            Dicas de Entrevista & Gerador de Currículo
+          </h4>
+          <p class="text-slate-600 leading-relaxed">
+            Aprenda como se vestir, como agir e responda às perguntas mais comuns nas entrevistas. Depois, crie seu currículo grátis e imprima em formato PDF.
+          </p>
+        </div>
+
+        <!-- Passo 5 -->
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1">
+          <h4 class="font-bold text-slate-800 text-sm flex items-center gap-2">
+            <span class="w-5 h-5 rounded-full bg-pink-600 text-white text-[10px] flex items-center justify-center">5</span>
+            Anunciar Vagas (Para Empresas)
+          </h4>
+          <p class="text-slate-600 leading-relaxed">
+            Se você possui uma conta de Empresa, poderá cadastrar vagas personalizando título, município do ES, salário e requisitos completos.
+          </p>
+        </div>
+      </div>
+
+      <div class="text-center pt-2">
+        <button onclick="closeTutorialModal()" class="px-6 py-2.5 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs rounded-xl transition shadow-md">
+          Entendi! Começar a Usar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // ESTADO GLOBAL DO APLICATIVO
+    let currentUser = {
+      name: '',
+      contact: '',
+      city: 'Vitória',
+      state: 'Espírito Santo',
+      role: 'Trabalhador' // 'Trabalhador' ou 'Empresa'
+    };
+
+    // BASE DE DADOS - FRASES MOTIVACIONAIS
+    const motivationalQuotes = [
+      { text: "O sucesso é a soma de pequenos esforços repetidos dia após dia no Espírito Santo.", author: "CONECTA-ES Motivacional" },
+      { text: "Não espere por oportunidades extraordinárias. Agarre as ocasiões comuns e faça-as grandes.", author: "Orison Swett Marden" },
+      { text: "A única maneira de fazer um ótimo trabalho é amar o que você faz.", author: "Steve Jobs" },
+      { text: "O mercado capixaba recompensa quem se prepara e busca evolução contínua.", author: "Guia Profissional ES" },
+      { text: "Cada currículo enviado é uma porta que você decide abrir para o seu futuro.", author: "CONECTA-ES" },
+      { text: "Sua dedicação de hoje constrói a carreira de sucesso de amanhã.", author: "Incentivo Profissional" },
+      { text: "Grandes conquistas começam com o primeiro passo da qualificação.", author: "SENAI / IFES ES" }
+    ];
+
+    // BASE DE DADOS - CURSOS NO ES
+    const esCourses = [
+      { title: "Técnico em Eletrotécnica", school: "SENAI Vitória", city: "Vitória", type: "Gratuito", mode: "Presencial", desc: "Capacitação para manutenção e instalações elétricas industriais." },
+      { title: "Auxiliar Administrativo", school: "CIEE Colatina", city: "Colatina", type: "Gratuito", mode: "Presencial", desc: "Rotinas de escritório, atendimento ao cliente e informática." },
+      { title: "Soldador de Produção", school: "SENAI Linhares", city: "Linhares", type: "Gratuito", mode: "Presencial", desc: "Processos MIG/MAG e TIG para indústrias da região norte." },
+      { title: "Programação Web & Python", school: "IFES Serra", city: "Serra", type: "Gratuito", mode: "EAD", desc: "Desenvolvimento de software e lógica de programação do zero." },
+      { title: "Atendimento ao Cliente & Vendas", school: "SEBRAE Vila Velha", city: "Vila Velha", type: "Gratuito", mode: "Presencial", desc: "Técnicas modernas de negociação e pós-venda." },
+      { title: "Logística Portuária e Armazenagem", school: "FAESA Aracruz", city: "Aracruz", type: "Pago", mode: "Presencial", desc: "Operações de transporte marítimo e cadeia de suprimentos." }
+    ];
+
+    // BASE DE DADOS - VAGAS NO ES (DINÂMICAS + PREDEFINIDAS)
+    let jobListings = [
+      { id: 1, title: "Atendente de Loja", company: "Supermercados Carone", city: "Vitória", salary: "R$ 1.620,00", type: "Presencial", desc: "Atendimento ao cliente, reposição e caixa.", applicantCount: 4 },
+      { id: 2, title: "Auxiliar de Logística", company: "Vix Logística", city: "Serra", salary: "R$ 1.950,00", type: "Presencial", desc: "Organização de mercadorias no galpão, conferência de notas.", applicantCount: 11 },
+      { id: 3, title: "Vendedor Interno", company: "Lojas Marisa", city: "Vila Velha", salary: "R$ 1.780,00 + Comissões", type: "Presencial", desc: "Atendimento no balcão e metas de vendas mensais.", applicantCount: 8 },
+      { id: 4, title: "Assistente Administrativo", company: "Cooperativa Coopeavi", city: "Colatina", salary: "R$ 2.200,00", type: "Híbrido", desc: "Suporte no faturamento e lançamentos em sistema.", applicantCount: 6 },
+      { id: 5, title: "Operador de Empilhadeira", company: "Pulp & Paper ES", city: "Aracruz", salary: "R$ 2.800,00", type: "Presencial", desc: "Carga e descarga de celulose com certificado válido.", applicantCount: 3 },
+      { id: 6, title: "Mecânico Industrial", company: "ArcelorMittal", city: "Cariacica", salary: "R$ 3.100,00", type: "Presencial", desc: "Manutenção preventiva de motores e esteiras.", applicantCount: 9 }
+    ];
+
+    // MENSAGENS SIMULADAS DO CHAT
+    let chatMessages = [
+      { sender: "Recrutamento Vix Logística", time: "Hoje, 10:15", text: "Olá! Recebemos seu perfil para a vaga em Serra. Você tem disponibilidade para entrevista nesta semana?" },
+      { sender: "SENAI Vitória", time: "Ontem", text: "Sua inscrição para o curso técnico foi confirmada! Confira a lista de documentos necessários." }
+    ];
+
+    // INICIALIZAÇÃO
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+      loadUserFromStorage();
+      generateRandomQuote();
+      renderHomeHighlights();
+      renderRegionJobs();
+      renderCourses();
+      renderAllJobs();
+      renderMessages();
+      updateCVPreview();
+    });
+
+    // SISTEMA DE TROCA DE ABAS COM CORES DIVERSAS
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      const activeTab = document.getElementById('tab-' + tabId);
+      if (activeTab) activeTab.classList.add('active');
+
+      // Atualiza estilo dos botões da nav
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('bg-sky-600', 'bg-cyan-600', 'bg-purple-600', 'bg-amber-600', 'bg-emerald-600', 'bg-pink-600', 'bg-indigo-600', 'text-white');
+        btn.classList.add('text-slate-300');
+      });
+
+      const currentNavBtn = document.getElementById('nav-' + tabId);
+      if (currentNavBtn) {
+        currentNavBtn.classList.remove('text-slate-300');
+        currentNavBtn.classList.add('text-white');
+        
+        // Aplica tom da aba
+        if (tabId === 'inicio') currentNavBtn.classList.add('bg-sky-600');
+        else if (tabId === 'vagas-regiao') currentNavBtn.classList.add('bg-cyan-600');
+        else if (tabId === 'cursos') currentNavBtn.classList.add('bg-purple-600');
+        else if (tabId === 'dicas') currentNavBtn.classList.add('bg-amber-600');
+        else if (tabId === 'encontrar-emprego') currentNavBtn.classList.add('bg-emerald-600');
+        else if (tabId === 'anunciar-vaga') currentNavBtn.classList.add('bg-pink-600');
+        else if (tabId === 'curriculo') currentNavBtn.classList.add('bg-indigo-600');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // FRASES MOTIVACIONAIS ALEATÓRIAS
+    function generateRandomQuote() {
+      const refreshIcon = document.getElementById('quoteRefreshIcon');
+      if (refreshIcon) refreshIcon.classList.add('animate-spin');
+
+      setTimeout(() => {
+        const randomIndex = Math.floor(Math.random() * motivationalQuotes.length);
+        const quote = motivationalQuotes[randomIndex];
+        document.getElementById('motivationalQuote').innerText = `"${quote.text}"`;
+        document.getElementById('motivationalAuthor').innerText = `— ${quote.author}`;
+        if (refreshIcon) refreshIcon.classList.remove('animate-spin');
+      }, 250);
+    }
+
+    // CARREGAR E SALVAR CADASTRO
+    function loadUserFromStorage() {
+      const saved = localStorage.getItem('conecta_es_user');
+      if (saved) {
+        currentUser = JSON.parse(saved);
+        updateUserUI();
+      }
+    }
+
+    function updateUserUI() {
+      if (currentUser.name) {
+        document.getElementById('userHeaderLabel').innerText = currentUser.name.split(' ')[0];
+        document.getElementById('welcomeUserTitle').innerText = `Olá, ${currentUser.name}!`;
+        document.getElementById('welcomeUserSubtitle').innerText = `Perfil: ${currentUser.role} | Cidade: ${currentUser.city} - ES`;
+        document.getElementById('welcomeBtnLabel').innerText = "Alterar Perfil";
+        
+        // Atualiza seletores de cidade para a cidade do usuário
+        document.getElementById('regionFilterSelect').value = currentUser.city;
+        document.getElementById('findJobCitySelect').value = currentUser.city;
+        filterRegionJobs();
+      }
+
+      // Permissões da aba Anunciar Vaga
+      if (currentUser.role === 'Empresa') {
+        document.getElementById('employerOnlyView').classList.remove('hidden');
+        document.getElementById('workerRestrictionView').classList.add('hidden');
+      } else {
+        document.getElementById('employerOnlyView').classList.add('hidden');
+        document.getElementById('workerRestrictionView').classList.remove('hidden');
+      }
+    }
+
+    function openRegisterModal() {
+      if (currentUser.name) {
+        document.getElementById('regName').value = currentUser.name;
+        document.getElementById('regContact').value = currentUser.contact;
+        document.getElementById('regCity').value = currentUser.city;
+        document.getElementById('regRole').value = currentUser.role || 'Trabalhador';
+      }
+      document.getElementById('registerModal').classList.remove('hidden');
+    }
+
+    function closeRegisterModal() {
+      document.getElementById('registerModal').classList.add('hidden');
+    }
+
+    function handleRegisterSubmit(e) {
+      e.preventDefault();
+      currentUser.name = document.getElementById('regName').value;
+      currentUser.contact = document.getElementById('regContact').value;
+      currentUser.city = document.getElementById('regCity').value;
+      currentUser.role = document.getElementById('regRole').value;
+
+      localStorage.setItem('conecta_es_user', JSON.stringify(currentUser));
+      updateUserUI();
+      closeRegisterModal();
+
+      alert(`Cadastro salvo com sucesso para ${currentUser.name} (${currentUser.city} - ES)!`);
+    }
+
+    function switchToEmployerRole() {
+      currentUser.role = 'Empresa';
+      localStorage.setItem('conecta_es_user', JSON.stringify(currentUser));
+      updateUserUI();
+      alert("Seu perfil foi atualizado para Empresa / Recrutador! Você já pode publicar e personalizar vagas.");
+    }
+
+    // DESTAQUES NA HOME
+    function renderHomeHighlights() {
+      const container = document.getElementById('homeHighlightsContainer');
+      const topJobs = jobListings.slice(0, 3);
+      
+      container.innerHTML = topJobs.map(job => `
+        <div class="border border-slate-200 rounded-xl p-4 hover:border-sky-500 transition space-y-2 bg-slate-50/50">
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded-md">${job.city}</span>
+            <span class="text-xs font-bold text-emerald-600">${job.salary}</span>
+          </div>
+          <h4 class="font-extrabold text-slate-800 text-sm">${job.title}</h4>
+          <p class="text-xs text-slate-500">${job.company}</p>
+          <button onclick="applyJob(${job.id})" class="w-full mt-2 py-1.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-xs font-bold transition">
+            Candidatar-se
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // ABA VAGAS NA REGIÃO
+    function filterRegionJobs() {
+      const selectedCity = document.getElementById('regionFilterSelect').value;
+      document.getElementById('currentRegionLabel').innerText = selectedCity === 'TODAS' ? 'Todas as cidades do ES' : selectedCity + ' - ES';
+      renderRegionJobs(selectedCity);
+    }
+
+    function renderRegionJobs(cityFilter = 'TODAS') {
+      const container = document.getElementById('regionJobsContainer');
+      let filtered = jobListings;
+
+      if (cityFilter !== 'TODAS') {
+        filtered = jobListings.filter(j => j.city.toLowerCase() === cityFilter.toLowerCase());
+      }
+
+      document.getElementById('jobsCountBadge').innerText = `${filtered.length} vagas encontradas`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-2 text-center py-10 bg-white rounded-2xl border border-dashed border-slate-300">
+            <i data-lucide="info" class="w-8 h-8 text-slate-400 mx-auto mb-2"></i>
+            <p class="text-sm font-bold text-slate-600">Nenhuma vaga encontrada para esta cidade no momento.</p>
+            <p class="text-xs text-slate-400">Tente selecionar "Todas as Cidades do ES" ou cadastre uma nova vaga.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      container.innerHTML = filtered.map(job => `
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm hover:shadow-md transition space-y-3">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-cyan-100 text-cyan-800 mb-1">${job.city} - ES</span>
+              <h3 class="font-extrabold text-slate-800 text-base">${job.title}</h3>
+              <p class="text-xs font-semibold text-slate-500">${job.company}</p>
+            </div>
+            <span class="text-sm font-black text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">${job.salary}</span>
+          </div>
+
+          <p class="text-xs text-slate-600 line-clamp-2">${job.desc}</p>
+
+          <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-[11px] text-slate-400">${job.applicantCount} candidatos aplicaram</span>
+            <button onclick="applyJob(${job.id})" class="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs rounded-xl transition shadow-sm">
+              Candidatar em 1 Clique
+            </button>
+          </div>
+        </div>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    // ABA CURSOS
+    function renderCourses() {
+      const search = document.getElementById('courseSearchInput').value.toLowerCase();
+      const type = document.getElementById('courseTypeSelect').value;
+      const container = document.getElementById('coursesGridContainer');
+
+      let filtered = esCourses.filter(c => {
+        const matchesSearch = c.title.toLowerCase().includes(search) || c.school.toLowerCase().includes(search);
+        const matchesType = type === 'TODOS' || c.type === type || c.mode === type;
+        return matchesSearch && matchesType;
+      });
+
+      container.innerHTML = filtered.map(c => `
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded ${c.type === 'Gratuito' ? 'bg-green-100 text-green-800' : 'bg-purple-100 text-purple-800'}">${c.type}</span>
+              <span class="text-xs font-semibold text-slate-400">${c.city} - ES</span>
+            </div>
+            <h3 class="font-bold text-slate-800 text-sm">${c.title}</h3>
+            <p class="text-xs font-bold text-purple-700">${c.school}</p>
+            <p class="text-xs text-slate-600 leading-relaxed">${c.desc}</p>
+          </div>
+          <button onclick="alert('Inscrição iniciada para o curso: ${c.title} na escola ${c.school}!')" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl transition">
+            Quero me Inscrever
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // ACCORDION DICAS DE ENTREVISTA
+    function toggleFaq(id) {
+      const answer = document.getElementById(`faqAnswer-${id}`);
+      const icon = document.getElementById(`faqIcon-${id}`);
+      if (answer.classList.contains('hidden')) {
+        answer.classList.remove('hidden');
+        if (icon) icon.style.transform = 'rotate(180deg)';
+      } else {
+        answer.classList.add('hidden');
+        if (icon) icon.style.transform = 'rotate(0deg)';
+      }
+    }
+
+    // ABA ENCONTRAR EMPREGO
+    function renderAllJobs() {
+      const titleSearch = document.getElementById('findJobTitleInput').value.toLowerCase();
+      const citySearch = document.getElementById('findJobCitySelect').value;
+      const modSearch = document.getElementById('findJobModalitySelect').value;
+      const container = document.getElementById('allJobsContainer');
+
+      let filtered = jobListings.filter(j => {
+        const matchesTitle = j.title.toLowerCase().includes(titleSearch) || j.company.toLowerCase().includes(titleSearch);
+        const matchesCity = citySearch === 'TODAS' || j.city.toLowerCase() === citySearch.toLowerCase();
+        const matchesMod = modSearch === 'TODOS' || j.type === modSearch;
+        return matchesTitle && matchesCity && matchesMod;
+      });
+
+      container.innerHTML = filtered.map(job => `
+        <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm space-y-3">
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">${job.city} (${job.type})</span>
+              <h3 class="font-extrabold text-slate-800 text-base mt-1">${job.title}</h3>
+              <p class="text-xs text-slate-500 font-semibold">${job.company}</p>
+            </div>
+            <span class="text-sm font-black text-emerald-600">${job.salary}</span>
+          </div>
+
+          <p class="text-xs text-slate-600">${job.desc}</p>
+
+          <button onclick="applyJob(${job.id})" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl transition shadow-sm">
+            Enviar Currículo para esta Vaga
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function applyJob(jobId) {
+      const job = jobListings.find(j => j.id === jobId);
+      if (job) {
+        job.applicantCount++;
+        renderRegionJobs(document.getElementById('regionFilterSelect').value);
+        renderAllJobs();
+        alert(`Sucesso! Seu currículo e cadastro foram enviados para a vaga de "${job.title}" na empresa ${job.company}.`);
+      }
+    }
+
+    // PUBLICAR NOVA VAGA (APENAS EMPRESAS PERSONALIZAM)
+    function handlePostJob(e) {
+      e.preventDefault();
+      if (currentUser.role !== 'Empresa') {
+        alert('Apenas perfis do tipo Empresa podem publicar vagas!');
+        return;
+      }
+
+      const title = document.getElementById('postJobTitle').value;
+      const salary = document.getElementById('postJobSalary').value;
+      const city = document.getElementById('postJobCity').value;
+      const desc = document.getElementById('postJobDescription').value;
+
+      const newJob = {
+        id: Date.now(),
+        title: title,
+        company: currentUser.name || "Empresa Cadastrada",
+        city: city,
+        salary: salary,
+        type: "Presencial",
+        desc: desc,
+        applicantCount: 0
+      };
+
+      jobListings.unshift(newJob);
+      renderHomeHighlights();
+      renderRegionJobs();
+      renderAllJobs();
+
+      document.getElementById('postJobForm').reset();
+      alert('Vaga personalizada cadastrada e publicada com sucesso no CONECTA-ES!');
+      switchTab('vagas-regiao');
+    }
+
+    // CHAT E NOTIFICAÇÕES
+    function toggleNotificationModal() {
+      const modal = document.getElementById('notificationModal');
+      modal.classList.toggle('hidden');
+      document.getElementById('unreadBadge').classList.add('hidden');
+      document.getElementById('unreadDot').classList.add('hidden');
+    }
+
+    function renderMessages() {
+      const list = document.getElementById('messagesList');
+      list.innerHTML = chatMessages.map(msg => `
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-xs text-slate-800">${msg.sender}</span>
+            <span class="text-[10px] text-slate-400">${msg.time}</span>
+          </div>
+          <p class="text-xs text-slate-600 leading-relaxed">${msg.text}</p>
+        </div>
+      `).join('');
+    }
+
+    // GERADOR DE CURRÍCULO EM TEMPO REAL
+    function updateCVPreview() {
+      const name = document.getElementById('cvName').value || 'SEU NOME COMPLETO';
+      const phone = document.getElementById('cvPhone').value || '(27) 99999-9999';
+      const email = document.getElementById('cvEmail').value || 'seuemail@exemplo.com';
+      const city = document.getElementById('cvCity').value || 'Vitória - Espírito Santo';
+      const obj = document.getElementById('cvObjective').value || 'CARGO DESEJADO';
+      const summary = document.getElementById('cvSummary').value || 'Profissional dedicado e pontual, em busca de oportunidade para contribuir com o crescimento da empresa no Espírito Santo.';
+      const exp = document.getElementById('cvExperience').value || 'Em busca do primeiro emprego / Disponível para início imediato.';
+      const edu = document.getElementById('cvEducation').value || 'Ensino Médio Completo.';
+
+      document.getElementById('prevName').innerText = name;
+      document.getElementById('prevPhone').innerText = phone;
+      document.getElementById('prevEmail').innerText = email;
+      document.getElementById('prevCity').innerText = city;
+      document.getElementById('prevObjective').innerText = obj;
+      document.getElementById('prevSummary').innerText = summary;
+      document.getElementById('prevExperience').innerText = exp;
+      document.getElementById('prevEducation').innerText = edu;
+    }
+
+    // TUTORIAL INTERATIVO DO APP (TEXTO E ÁUDIO COM IA)
+    let synth = window.speechSynthesis;
+    let speechUtterance = null;
+
+    function startInteractiveTutorial() {
+      document.getElementById('tutorialModal').classList.remove('hidden');
+      selectTutorialMode('text');
+    }
+
+    function closeTutorialModal() {
+      stopSpeechTutorial();
+      document.getElementById('tutorialModal').classList.add('hidden');
+    }
+
+    function selectTutorialMode(mode) {
+      const textBtn = document.getElementById('modeTextBtn');
+      const audioBtn = document.getElementById('modeAudioBtn');
+      const audioPanel = document.getElementById('audioControlsPanel');
+
+      if (mode === 'text') {
+        textBtn.className = "p-4 rounded-xl border-2 border-sky-600 bg-sky-50 text-sky-800 font-bold text-sm flex flex-col items-center gap-2 hover:bg-sky-100 transition";
+        audioBtn.className = "p-4 rounded-xl border-2 border-slate-200 bg-slate-50 text-slate-700 font-bold text-sm flex flex-col items-center gap-2 hover:bg-purple-50 hover:border-purple-500 transition";
+        audioPanel.classList.add('hidden');
+        stopSpeechTutorial();
+      } else {
+        audioBtn.className = "p-4 rounded-xl border-2 border-purple-600 bg-purple-50 text-purple-800 font-bold text-sm flex flex-col items-center gap-2 hover:bg-purple-100 transition";
+        textBtn.className = "p-4 rounded-xl border-2 border-slate-200 bg-slate-50 text-slate-700 font-bold text-sm flex flex-col items-center gap-2 hover:bg-sky-50 hover:border-sky-500 transition";
+        audioPanel.classList.remove('hidden');
+        playSpeechTutorial();
+      }
+    }
+
+    function playSpeechTutorial() {
+      if (!('speechSynthesis' in window)) {
+        alert('Seu navegador não suporta a síntese de voz.');
+        return;
+      }
+
+      synth.cancel();
+
+      const textToRead = "Bem-vindo ao tutorial do CONECTA-ES. " +
+        "Passo 1: Faça seu cadastro informando sua cidade no Espírito Santo para filtrar vagas locais. " +
+        "Passo 2: Navegue pelas abas Vagas na Região e Encontrar Emprego para enviar seu currículo com um clique. " +
+        "Passo 3: Na aba Cursos, encontre qualificações gratuitas no SENAI, IFES e CIEE. " +
+        "Passo 4: Use o Gerador de Currículo para criar seu documento formatado. " +
+        "Passo 5: Se você for uma empresa, acesse a aba Anunciar Vaga para publicar oportunidades personalizadas.";
+
+      speechUtterance = new SpeechSynthesisUtterance(textToRead);
+      speechUtterance.lang = 'pt-BR';
+      speechUtterance.rate = 1.0;
+
+      document.getElementById('audioStatusBadge').innerText = "Reproduzindo voz...";
+
+      speechUtterance.onend = () => {
+        document.getElementById('audioStatusBadge').innerText = "Concluído";
+      };
+
+      synth.speak(speechUtterance);
+    }
+
+    function pauseSpeechTutorial() {
+      if (synth && synth.speaking) {
+        synth.pause();
+        document.getElementById('audioStatusBadge').innerText = "Pausado";
+      }
+    }
+
+    function stopSpeechTutorial() {
+      if (synth) {
+        synth.cancel();
+        document.getElementById('audioStatusBadge').innerText = "Parado";
+      }
+    }
+  </script>
+</body>
+</html>
